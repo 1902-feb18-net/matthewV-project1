@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ardalis.GuardClauses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -28,6 +29,11 @@ namespace Project1.Library
             }
         }
 
+        public Ingredient(string name)
+        {
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            _name = name;
+        }
 
         //reverse navigation properties
         public ICollection<PizzaIngredient> PizzaIngredients { get; set; }

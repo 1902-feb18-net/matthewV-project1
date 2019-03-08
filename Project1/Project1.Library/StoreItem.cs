@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ardalis.GuardClauses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -28,8 +29,16 @@ namespace Project1.Library
         }
 
 
-
         public Ingredient Ingredient { get; set; }
         public Store Store { get; set; }
+
+
+        public StoreItem(int quantity, Ingredient ingredient, Store store)
+        {
+            Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);
+            _quantity = quantity;
+            Ingredient = ingredient;
+            Store = store;
+        }
     }
 }

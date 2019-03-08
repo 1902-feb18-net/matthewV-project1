@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ardalis.GuardClauses;
+using System;
 using System.Collections.Generic;
 
 namespace Project1.Library
@@ -59,6 +60,19 @@ namespace Project1.Library
             {
                 _store = value ?? throw new ArgumentNullException(nameof(value), "Customer's store must not be null.");
             }
+        }
+
+
+        public Customer(string firstname, string lastname, string email, Address address)
+        {
+            Guard.Against.NullOrWhiteSpace(firstname, nameof(firstname));
+            Guard.Against.NullOrWhiteSpace(lastname, nameof(lastname));
+
+            _firstname = firstname;
+            _lastname = lastname;
+            Email = email;
+            Address = address;
+
         }
 
 

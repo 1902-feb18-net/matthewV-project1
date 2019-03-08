@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ardalis.GuardClauses;
+using System;
 
 namespace Project1.Library
 {
@@ -29,5 +30,13 @@ namespace Project1.Library
         public Pizza Pizza { get; set; }
         public Order Order { get; set; }
 
+
+        public OrderItem(int quantity, Pizza pizza, Order order)
+        {
+            Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);
+            _quantity = quantity;
+            Pizza = pizza;
+            Order = order;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ardalis.GuardClauses;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -37,6 +38,17 @@ namespace Project1.Library
                 _address = value ?? throw new ArgumentNullException(nameof(value), "Store's address must not be null.");
             }
         }
+
+
+        public Store(string name, Address address)
+        {
+            Guard.Against.NullOrWhiteSpace(name, nameof(name));
+            Guard.Against.Null(address, nameof(address));
+
+            Name = name;
+            Address = address;
+        }
+
 
         ICollection<Order> Orders { get; set; } //the orders to this store. Reverse navigation property
     }

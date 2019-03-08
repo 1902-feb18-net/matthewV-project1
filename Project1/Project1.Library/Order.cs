@@ -14,7 +14,17 @@ namespace Project1.Library
         public Store OrderedAt { get; set; }
         public Customer OrderedBy { get; set; }
 
- 
+
+        public Order(DateTime orderTime, decimal totalPrice, Address address, Store orderdAt, Customer orderedBy)
+        {
+            OrderTime = orderTime;
+            TotalPrice = totalPrice;
+            Address = address;
+            OrderedAt = orderdAt;
+            OrderedBy = orderedBy;
+        }
+
+
         public ICollection<OrderItem> Items { get; set; } //reverse navigation property
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ardalis.GuardClauses;
+using System;
 
 namespace Project1.Library
 {
@@ -62,6 +63,20 @@ namespace Project1.Library
                 _zipcode = value;
             }
         } 
+
+
+        public Address(string street, string city, string state, string country, string zipcode)
+        {
+            Guard.Against.NullOrWhiteSpace(street, nameof(street));
+            Guard.Against.NullOrWhiteSpace(country, nameof(country));
+
+            _street = street;
+            City = city;
+            State = state;
+            _country = country;
+            Zipcode = zipcode;
+
+        }
 
 
     }
