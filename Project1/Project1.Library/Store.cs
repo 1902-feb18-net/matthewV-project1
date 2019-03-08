@@ -39,7 +39,7 @@ namespace Project1.Library
         }
 
 
-        public ICollection<StoreItem> Inventory { get; set; } //the inventory of this store. Reverse navigation property
+        public ICollection<StoreItem> StoreItems { get; set; } //the inventory of this store. Reverse navigation property
         public ICollection<Order> Orders { get; set; } //the orders to this store. Reverse navigation property
     }
 }

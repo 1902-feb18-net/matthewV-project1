@@ -64,6 +64,8 @@ namespace Project1.DataAccess
                                                                           // if we don't have an explicit foreign key property (e.g. OrderId)
                                                                           // that's perfectly fine (under the hood, a "shadow property" will
                                                                           // be made for it)
+
+                builder.HasOne(c => c.Address).WithMany(a => a.Customers);
             });
 
             modelBuilder.Entity<Ingredient>(builder =>
@@ -93,7 +95,7 @@ namespace Project1.DataAccess
 
                 builder.HasOne(o => o.OrderedAt).WithMany(s => s.Orders);
 
-                builder.HasMany(o => o.Items).WithOne(oi => oi.Order);
+                builder.HasMany(o => o.OrderItems).WithOne(oi => oi.Order);
 
             });
 
@@ -102,12 +104,6 @@ namespace Project1.DataAccess
                 builder.HasKey(oi => oi.Id);
 
                 builder.Property(oi => oi.Quantity)
-                    .IsRequired(); // (column will be NOT NULL)
-
-                builder.Property(oi => oi.Pizza)
-                    .IsRequired(); // (column will be NOT NULL)
-
-                builder.Property(oi => oi.Order)
                     .IsRequired(); // (column will be NOT NULL)
 
 
@@ -133,11 +129,6 @@ namespace Project1.DataAccess
                 builder.Property(pi => pi.Quantity)
                     .IsRequired(); // (column will be NOT NULL)
 
-                builder.Property(pi => pi.Pizza)
-                    .IsRequired(); // (column will be NOT NULL)
-
-                builder.Property(pi => pi.Ingredient)
-                    .IsRequired(); // (column will be NOT NULL)
             });
 
             modelBuilder.Entity<Store>(builder =>
@@ -149,7 +140,7 @@ namespace Project1.DataAccess
                     .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(s => s.Inventory).WithOne(si => si.Store);
+                builder.HasMany(s => s.StoreItems).WithOne(si => si.Store);
             });
 
             modelBuilder.Entity<StoreItem>(builder =>
@@ -158,12 +149,6 @@ namespace Project1.DataAccess
 
                 builder.Property(si => si.Quantity)
                     .IsRequired(); // (column will be NOT NULL)
-
-                builder.Property(si => si.Ingredient)
-                    .IsRequired(); // (column will be NOT NULL)
-
-                builder.Property(si => si.Store)
-                    .IsRequired();  // (column will be NOT NULL)
             });
         }
 

@@ -18,11 +18,11 @@ namespace Project1.Library
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Order item's quantity must not be negative.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Pizza ingredient's quantity must not be negative.");
                 }
                 else if (value == 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Order item's quantity must not be zero.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Pizza ingredient's quantity must not be zero.");
                 }
                 else
                 {

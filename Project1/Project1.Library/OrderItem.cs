@@ -12,7 +12,7 @@ namespace Project1.Library
         public int Quantity
         {
             get => _quantity;
-            set
+            private set
             {
                 if (value < 0)
                 {
@@ -33,7 +33,7 @@ namespace Project1.Library
         public Pizza Pizza
         {
             get => _pizza;
-            set
+            private set
             {
                 Guard.Against.Null(value, nameof(value));
                 _pizza = value;
@@ -43,7 +43,7 @@ namespace Project1.Library
         public Order Order
         {
             get => _order;
-            set
+            private set
             {
                 Guard.Against.Null(value, nameof(value));
                 _order = value;
