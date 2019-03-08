@@ -16,18 +16,9 @@ namespace Project1.Library
             get => _firstname;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Customer's first name not be null.");
-                }
-                else if (value.Length == 0)
-                {
-                    throw new ArgumentException("Customer's first name must not be empty.", nameof(value));
-                }
-                else
-                {
-                    _firstname = value;
-                }
+                Guard.Against.NullOrWhiteSpace(value, nameof(value));
+                _firstname = value;
+
             }
         }
 
@@ -36,18 +27,8 @@ namespace Project1.Library
             get => _lastname;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Customer's larst name not be null.");
-                }
-                else if (value.Length == 0)
-                {
-                    throw new ArgumentException("Customer's last name must not be empty.", nameof(value));
-                }
-                else
-                {
-                    _lastname = value;
-                }
+                Guard.Against.NullOrWhiteSpace(value, nameof(value));
+                _lastname = value;
             }
         }
 
@@ -63,13 +44,13 @@ namespace Project1.Library
         }
 
 
-        public Customer(string firstname, string lastname, string email, Address address)
+        public Customer(string firstName, string lastName, string email, Address address)
         {
-            Guard.Against.NullOrWhiteSpace(firstname, nameof(firstname));
-            Guard.Against.NullOrWhiteSpace(lastname, nameof(lastname));
+            Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
+            Guard.Against.NullOrWhiteSpace(lastName, nameof(lastName));
 
-            _firstname = firstname;
-            _lastname = lastname;
+            FirstName = firstName;
+            LastName = lastName;
             Email = email;
             Address = address;
 

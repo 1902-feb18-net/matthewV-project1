@@ -15,11 +15,11 @@ namespace Project1.Library
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Order item's quantity must not be negative.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Pizza's price must not be negative.");
                 }
                 else if (value == 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Order item's quantity must not be zero.");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Pizza's price must not be zero.");
                 }
                 else
                 {
@@ -45,18 +45,20 @@ namespace Project1.Library
 
             if (price < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(price), "Order item's quantity must not be negative.");
+                throw new ArgumentOutOfRangeException(nameof(price), "Pizza's price must not be negative.");
             }
             else if (price == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(price), "Order item's quantity must not be zero.");
+                throw new ArgumentOutOfRangeException(nameof(price), "Pizza's price must not be zero.");
             }
             else
             {
                 Price = price;
             }
-            _name = name;
+
+            Name = name;
         }
+
 
         //reverse navigation properties
         ICollection<OrderItem> OrderItems { get; set; }

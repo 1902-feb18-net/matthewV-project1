@@ -14,18 +14,9 @@ namespace Project1.Library
             get => _street;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Street must not be null.");
-                }
-                else if (value.Length == 0)
-                {
-                    throw new ArgumentException("Street must not be empty.", nameof(value));
-                }
-                else
-                {
-                    _street = value;
-                }
+                Guard.Against.NullOrWhiteSpace(value, nameof(value));
+                _street = value;
+               
             }
         }
 
@@ -38,18 +29,9 @@ namespace Project1.Library
             get => _country;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Country must not be null.");
-                }
-                else if (value.Length == 0)
-                {
-                    throw new ArgumentException("Country must not be empty.", nameof(value));
-                }
-                else
-                {
-                    _country = value;
-                }
+                Guard.Against.NullOrWhiteSpace(value, nameof(value));
+                _country = value;
+               
             }
         }
 
@@ -70,10 +52,10 @@ namespace Project1.Library
             Guard.Against.NullOrWhiteSpace(street, nameof(street));
             Guard.Against.NullOrWhiteSpace(country, nameof(country));
 
-            _street = street;
+            Street = street;
             City = city;
             State = state;
-            _country = country;
+            Country = country;
             Zipcode = zipcode;
 
         }

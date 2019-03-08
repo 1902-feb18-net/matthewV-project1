@@ -8,6 +8,9 @@ namespace Project1.Library
     public class StoreItem : IDClass
     {
         private int _quantity; //the number of the ingredient in the store's inventory
+        private Ingredient _ingredient;
+        private Store _store;
+
         public int Quantity
         {
             get => _quantity;
@@ -28,15 +31,34 @@ namespace Project1.Library
             }
         }
 
+        public Ingredient Ingredient
+        {
+            get => _ingredient;
+            set
+            {
+                Guard.Against.Null(value, nameof(value));
+                _ingredient = value;
+            }
+        }
 
-        public Ingredient Ingredient { get; set; }
-        public Store Store { get; set; }
+        public Store Store
+        {
+            get => _store;
+            set
+            {
+                Guard.Against.Null(value, nameof(value));
+                _store = value;
+            }
+        }
 
 
         public StoreItem(int quantity, Ingredient ingredient, Store store)
         {
             Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);
-            _quantity = quantity;
+            Guard.Against.Null(ingredient, nameof(ingredient));
+            Guard.Against.Null(store, nameof(store));
+
+            Quantity = quantity;
             Ingredient = ingredient;
             Store = store;
         }

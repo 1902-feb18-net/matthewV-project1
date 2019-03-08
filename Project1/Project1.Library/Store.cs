@@ -16,18 +16,8 @@ namespace Project1.Library
             get => _name;
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException(nameof(value), "Store's name not be null.");
-                }
-                else if (value.Length == 0)
-                {
-                    throw new ArgumentException("Store's first name must not be empty.", nameof(value));
-                }
-                else
-                {
-                    _name = value;
-                }
+                Guard.Against.NullOrWhiteSpace(value, nameof(value));
+                _name = value;            
             }
         }
 
