@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project1.Library", "Project
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project1.WebApp", "Project1.WebApp\Project1.WebApp.csproj", "{F5D0F9FA-4720-414F-830C-3617636169BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project1.Context", "Project1.Context\Project1.Context.csproj", "{722928F2-6A0B-4608-AB2F-555C8C12BA14}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project1.DataAccess", "Project1.Context\Project1.DataAccess.csproj", "{722928F2-6A0B-4608-AB2F-555C8C12BA14}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project1.XUnitTesting", "Project1.XUnitTesting\Project1.XUnitTesting.csproj", "{FE58B123-6454-499C-BFA0-C838C178D3EB}"
 EndProject
