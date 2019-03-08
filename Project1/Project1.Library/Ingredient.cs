@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Project1.Library
 {
-    public class Ingredient
+    public class Ingredient : IDClass
     {
         private string _name;
         public string Name

@@ -9,7 +9,6 @@ namespace Project1.Library
     {
         private string _name;
         private Address _address; //Physical location of the store
-        List<StoreItem> Inventory { get; set; } = new List<StoreItem>();
 
         public string Name
         {
@@ -40,6 +39,7 @@ namespace Project1.Library
         }
 
 
-        ICollection<Order> Orders { get; set; } //the orders to this store. Reverse navigation property
+        public ICollection<StoreItem> Inventory { get; set; } //the inventory of this store. Reverse navigation property
+        public ICollection<Order> Orders { get; set; } //the orders to this store. Reverse navigation property
     }
 }

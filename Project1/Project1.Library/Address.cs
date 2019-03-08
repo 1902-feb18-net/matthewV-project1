@@ -1,9 +1,10 @@
 ﻿using Ardalis.GuardClauses;
 using System;
+using System.Collections.Generic;
 
 namespace Project1.Library
 {
-    public class Address
+    public class Address : IDClass
     {
         private string _street;
         private string _country;
@@ -60,6 +61,13 @@ namespace Project1.Library
 
         }
 
+
+
+        //Reverse navigation properties
+        public Store Store { get; set; }
+        public ICollection<Customer> Customers { get; set; }
+        public ICollection<Order> Orders { get; set; }
+        
 
     }
 }

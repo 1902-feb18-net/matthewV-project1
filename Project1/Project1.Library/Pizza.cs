@@ -61,7 +61,7 @@ namespace Project1.Library
 
 
         //reverse navigation properties
-        ICollection<OrderItem> OrderItems { get; set; }
-        ICollection<PizzaIngredient> Ingredients { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
+        public ICollection<PizzaIngredient> PizzaIngredients { get; set; }
     }
 }
