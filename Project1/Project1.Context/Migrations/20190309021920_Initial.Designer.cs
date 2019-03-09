@@ -10,7 +10,7 @@ using Project1.DataAccess;
 namespace Project1.DataAccess.Migrations
 {
     [DbContext(typeof(Project1DbContext))]
-    [Migration("20190309004301_Initial")]
+    [Migration("20190309021920_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,7 +64,7 @@ namespace Project1.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<int>("StoreId");
+                    b.Property<int?>("StoreId");
 
                     b.HasKey("Id");
 
@@ -101,9 +101,9 @@ namespace Project1.DataAccess.Migrations
                     b.Property<DateTime>("OrderTime")
                         .HasColumnType("DATETIME2");
 
-                    b.Property<int>("OrderedAtId");
+                    b.Property<int?>("OrderedAtId");
 
-                    b.Property<int>("OrderedById");
+                    b.Property<int?>("OrderedById");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(8, 2)");
@@ -125,9 +125,9 @@ namespace Project1.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("OrderId");
+                    b.Property<int?>("OrderId");
 
-                    b.Property<int>("PizzaId");
+                    b.Property<int?>("PizzaId");
 
                     b.Property<int>("Quantity");
 
@@ -164,9 +164,9 @@ namespace Project1.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("IngredientId");
+                    b.Property<int?>("IngredientId");
 
-                    b.Property<int>("PizzaId");
+                    b.Property<int?>("PizzaId");
 
                     b.Property<int>("Quantity");
 
@@ -185,7 +185,7 @@ namespace Project1.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AddressId");
+                    b.Property<int?>("AddressId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -194,7 +194,8 @@ namespace Project1.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[AddressId] IS NOT NULL");
 
                     b.ToTable("Store");
                 });
@@ -205,11 +206,11 @@ namespace Project1.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("IngredientId");
+                    b.Property<int?>("IngredientId");
 
                     b.Property<int>("Quantity");
 
-                    b.Property<int>("StoreId");
+                    b.Property<int?>("StoreId");
 
                     b.HasKey("Id");
 
@@ -224,29 +225,31 @@ namespace Project1.DataAccess.Migrations
                 {
                     b.HasOne("Project1.Library.Address", "Address")
                         .WithMany("Customers")
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Project1.Library.Store", "Store")
                         .WithMany("Customers")
                         .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Project1.Library.Order", b =>
                 {
                     b.HasOne("Project1.Library.Address", "Address")
                         .WithMany("Orders")
-                        .HasForeignKey("AddressId");
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project1.Library.Store", "OrderedAt")
                         .WithMany("Orders")
                         .HasForeignKey("OrderedAtId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project1.Library.Customer", "OrderedBy")
                         .WithMany("Orders")
                         .HasForeignKey("OrderedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Project1.Library.OrderItem", b =>
@@ -254,12 +257,12 @@ namespace Project1.DataAccess.Migrations
                     b.HasOne("Project1.Library.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project1.Library.Pizza", "Pizza")
                         .WithMany("OrderItems")
                         .HasForeignKey("PizzaId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Project1.Library.PizzaIngredient", b =>
@@ -267,7 +270,7 @@ namespace Project1.DataAccess.Migrations
                     b.HasOne("Project1.Library.Ingredient", "Ingredient")
                         .WithMany("PizzaIngredients")
                         .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project1.Library.Pizza", "Pizza")
                         .WithMany("PizzaIngredients")
@@ -280,7 +283,7 @@ namespace Project1.DataAccess.Migrations
                     b.HasOne("Project1.Library.Address", "Address")
                         .WithOne("Store")
                         .HasForeignKey("Project1.Library.Store", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Project1.Library.StoreItem", b =>
@@ -288,7 +291,7 @@ namespace Project1.DataAccess.Migrations
                     b.HasOne("Project1.Library.Ingredient", "Ingredient")
                         .WithMany("StoreItems")
                         .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Project1.Library.Store", "Store")
                         .WithMany("StoreItems")

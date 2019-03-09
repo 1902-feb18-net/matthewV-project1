@@ -36,11 +36,11 @@ namespace Project1.DataAccess
                       .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(a => a.Customers).WithOne(c => c.Address);
+                builder.HasMany(a => a.Customers).WithOne(c => c.Address).OnDelete(DeleteBehavior.SetNull); //customer address is nullable
 
-                builder.HasMany(a => a.Orders).WithOne(o => o.Address);
+                builder.HasMany(a => a.Orders).WithOne(o => o.Address).OnDelete(DeleteBehavior.Restrict); //prevent deleting order history
 
-                builder.HasOne(a => a.Store).WithOne(s => s.Address).HasForeignKey("Store", "AddressId").IsRequired(); 
+                builder.HasOne(a => a.Store).WithOne(s => s.Address).HasForeignKey("Store", "AddressId").OnDelete(DeleteBehavior.Restrict);
                 //Store will have shadow property AddressId foreign key
             });
 
@@ -57,13 +57,9 @@ namespace Project1.DataAccess
                   .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(c => c.Orders).WithOne(o => o.OrderedBy).IsRequired(); // configuring the relationships is important
-                                                                          // here we configure "both directions" of navigation property.
-                                                                          // if we don't have an explicit foreign key property (e.g. OrderId)
-                                                                          // that's perfectly fine (under the hood, a "shadow property" will
-                                                                          // be made for it)
+                builder.HasMany(c => c.Orders).WithOne(o => o.OrderedBy).OnDelete(DeleteBehavior.Restrict);
 
-                builder.HasOne(c => c.Store).WithMany(s => s.Customers).IsRequired();
+                builder.HasOne(c => c.Store).WithMany(s => s.Customers).OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Ingredient>(builder =>
@@ -75,25 +71,25 @@ namespace Project1.DataAccess
                         .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(i => i.PizzaIngredients).WithOne(pi => pi.Ingredient).IsRequired();
+                builder.HasMany(i => i.PizzaIngredients).WithOne(pi => pi.Ingredient).OnDelete(DeleteBehavior.Restrict);
 
-                builder.HasMany(i => i.StoreItems).WithOne(si => si.Ingredient).IsRequired();
+                builder.HasMany(i => i.StoreItems).WithOne(si => si.Ingredient).OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Order>(builder =>
             {
                 builder.HasKey(o => o.Id);
 
-                builder.Property(o => o.OrderTime) 
+                builder.Property(o => o.OrderTime)
                     .IsRequired() // (column will be NOT NULL)
                     .HasColumnType("DATETIME2"); // (column will be DATETIME2)
 
                 builder.Property(o => o.TotalPrice).HasColumnType("decimal(8, 2)");
 
 
-                builder.HasOne(o => o.OrderedAt).WithMany(s => s.Orders).IsRequired();
+                builder.HasOne(o => o.OrderedAt).WithMany(s => s.Orders).OnDelete(DeleteBehavior.Restrict);
 
-                builder.HasMany(o => o.OrderItems).WithOne(oi => oi.Order).IsRequired();
+                builder.HasMany(o => o.OrderItems).WithOne(oi => oi.Order).OnDelete(DeleteBehavior.Restrict);
 
             });
 
@@ -105,7 +101,7 @@ namespace Project1.DataAccess
                     .IsRequired(); // (column will be NOT NULL)
 
 
-                builder.HasOne(oi => oi.Pizza).WithMany(p => p.OrderItems).IsRequired();
+                builder.HasOne(oi => oi.Pizza).WithMany(p => p.OrderItems).OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Pizza>(builder =>
@@ -119,7 +115,7 @@ namespace Project1.DataAccess
                 builder.Property(p => p.Price).HasColumnType("decimal(6, 2)");
 
 
-                builder.HasMany(p => p.PizzaIngredients).WithOne(pi => pi.Pizza).IsRequired();
+                builder.HasMany(p => p.PizzaIngredients).WithOne(pi => pi.Pizza).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PizzaIngredient>(builder =>
@@ -140,7 +136,7 @@ namespace Project1.DataAccess
                     .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(s => s.StoreItems).WithOne(si => si.Store).IsRequired();
+                builder.HasMany(s => s.StoreItems).WithOne(si => si.Store).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<StoreItem>(builder =>
@@ -150,6 +146,7 @@ namespace Project1.DataAccess
                 builder.Property(si => si.Quantity)
                     .IsRequired(); // (column will be NOT NULL)
             });
+
         }
 
     }

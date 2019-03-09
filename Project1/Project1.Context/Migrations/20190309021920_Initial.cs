@@ -59,7 +59,7 @@ namespace Project1.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    AddressId = table.Column<int>(nullable: false)
+                    AddressId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,7 +69,7 @@ namespace Project1.DataAccess.Migrations
                         column: x => x.AddressId,
                         principalTable: "Address",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,8 +79,8 @@ namespace Project1.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Quantity = table.Column<int>(nullable: false),
-                    IngredientId = table.Column<int>(nullable: false),
-                    PizzaId = table.Column<int>(nullable: false)
+                    IngredientId = table.Column<int>(nullable: true),
+                    PizzaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -90,7 +90,7 @@ namespace Project1.DataAccess.Migrations
                         column: x => x.IngredientId,
                         principalTable: "Ingredient",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PizzaIngredient_Pizza_PizzaId",
                         column: x => x.PizzaId,
@@ -109,7 +109,7 @@ namespace Project1.DataAccess.Migrations
                     AddressId = table.Column<int>(nullable: true),
                     FirstName = table.Column<string>(maxLength: 255, nullable: false),
                     LastName = table.Column<string>(maxLength: 255, nullable: false),
-                    StoreId = table.Column<int>(nullable: false)
+                    StoreId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -119,13 +119,13 @@ namespace Project1.DataAccess.Migrations
                         column: x => x.AddressId,
                         principalTable: "Address",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Customer_Store_StoreId",
                         column: x => x.StoreId,
                         principalTable: "Store",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,8 +135,8 @@ namespace Project1.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Quantity = table.Column<int>(nullable: false),
-                    IngredientId = table.Column<int>(nullable: false),
-                    StoreId = table.Column<int>(nullable: false)
+                    IngredientId = table.Column<int>(nullable: true),
+                    StoreId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -146,7 +146,7 @@ namespace Project1.DataAccess.Migrations
                         column: x => x.IngredientId,
                         principalTable: "Ingredient",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_StoreItem_Store_StoreId",
                         column: x => x.StoreId,
@@ -164,8 +164,8 @@ namespace Project1.DataAccess.Migrations
                     OrderTime = table.Column<DateTime>(type: "DATETIME2", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(8, 2)", nullable: false),
                     AddressId = table.Column<int>(nullable: true),
-                    OrderedAtId = table.Column<int>(nullable: false),
-                    OrderedById = table.Column<int>(nullable: false)
+                    OrderedAtId = table.Column<int>(nullable: true),
+                    OrderedById = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,13 +181,13 @@ namespace Project1.DataAccess.Migrations
                         column: x => x.OrderedAtId,
                         principalTable: "Store",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Order_Customer_OrderedById",
                         column: x => x.OrderedById,
                         principalTable: "Customer",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -197,8 +197,8 @@ namespace Project1.DataAccess.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Quantity = table.Column<int>(nullable: false),
-                    PizzaId = table.Column<int>(nullable: false),
-                    OrderId = table.Column<int>(nullable: false)
+                    PizzaId = table.Column<int>(nullable: true),
+                    OrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -208,13 +208,13 @@ namespace Project1.DataAccess.Migrations
                         column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_OrderItem_Pizza_PizzaId",
                         column: x => x.PizzaId,
                         principalTable: "Pizza",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -266,7 +266,8 @@ namespace Project1.DataAccess.Migrations
                 name: "IX_Store_AddressId",
                 table: "Store",
                 column: "AddressId",
-                unique: true);
+                unique: true,
+                filter: "[AddressId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StoreItem_IngredientId",
