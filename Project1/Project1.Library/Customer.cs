@@ -44,13 +44,11 @@ namespace Project1.Library
         }
 
 
-        public Customer(string firstName, string lastName, string email, Address address)
+        public Customer(string firstName, string lastName, string email)
         {
             Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
             Guard.Against.NullOrWhiteSpace(lastName, nameof(lastName));
-            Guard.Against.Null(address, nameof(address));
 
-            Address = address;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

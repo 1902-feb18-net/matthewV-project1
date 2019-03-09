@@ -40,7 +40,8 @@ namespace Project1.DataAccess
 
                 builder.HasMany(a => a.Orders).WithOne(o => o.Address);
 
-                builder.HasOne(a => a.Store).WithOne(s => s.Address);
+                builder.HasOne(a => a.Store).WithOne(s => s.Address).HasForeignKey("Store", "AddressId").IsRequired(); 
+                //Store will have shadow property AddressId foreign key
             });
 
             modelBuilder.Entity<Customer>(builder =>
@@ -55,17 +56,14 @@ namespace Project1.DataAccess
                   .IsRequired()  // (column will be NOT NULL)
                   .HasMaxLength(255); // (column will be NVARCHAR(255)
 
-                builder.Property(c => c.Store)
-                  .IsRequired();  // (column will be NOT NULL)
 
-
-                builder.HasMany(c => c.Orders).WithOne(o => o.OrderedBy); // configuring the relationships is important
+                builder.HasMany(c => c.Orders).WithOne(o => o.OrderedBy).IsRequired(); // configuring the relationships is important
                                                                           // here we configure "both directions" of navigation property.
                                                                           // if we don't have an explicit foreign key property (e.g. OrderId)
                                                                           // that's perfectly fine (under the hood, a "shadow property" will
                                                                           // be made for it)
 
-                builder.HasOne(c => c.Address).WithMany(a => a.Customers);
+                builder.HasOne(c => c.Store).WithMany(s => s.Customers).IsRequired();
             });
 
             modelBuilder.Entity<Ingredient>(builder =>
@@ -77,25 +75,25 @@ namespace Project1.DataAccess
                         .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(i => i.PizzaIngredients).WithOne(pi => pi.Ingredient);
+                builder.HasMany(i => i.PizzaIngredients).WithOne(pi => pi.Ingredient).IsRequired();
 
-                builder.HasMany(i => i.StoreItems).WithOne(si => si.Ingredient);
+                builder.HasMany(i => i.StoreItems).WithOne(si => si.Ingredient).IsRequired();
             });
 
             modelBuilder.Entity<Order>(builder =>
             {
                 builder.HasKey(o => o.Id);
 
-                builder.Property(m => m.OrderTime) 
+                builder.Property(o => o.OrderTime) 
                     .IsRequired() // (column will be NOT NULL)
                     .HasColumnType("DATETIME2"); // (column will be DATETIME2)
 
-                //total price?
+                builder.Property(o => o.TotalPrice).HasColumnType("decimal(8, 2)");
 
 
-                builder.HasOne(o => o.OrderedAt).WithMany(s => s.Orders);
+                builder.HasOne(o => o.OrderedAt).WithMany(s => s.Orders).IsRequired();
 
-                builder.HasMany(o => o.OrderItems).WithOne(oi => oi.Order);
+                builder.HasMany(o => o.OrderItems).WithOne(oi => oi.Order).IsRequired();
 
             });
 
@@ -107,7 +105,7 @@ namespace Project1.DataAccess
                     .IsRequired(); // (column will be NOT NULL)
 
 
-                builder.HasOne(oi => oi.Pizza).WithMany(p => p.OrderItems);
+                builder.HasOne(oi => oi.Pizza).WithMany(p => p.OrderItems).IsRequired();
             });
 
             modelBuilder.Entity<Pizza>(builder =>
@@ -118,8 +116,10 @@ namespace Project1.DataAccess
                        .IsRequired()  // (column will be NOT NULL)
                        .HasMaxLength(255); // (column will be NVARCHAR(255)
 
+                builder.Property(p => p.Price).HasColumnType("decimal(6, 2)");
 
-                builder.HasMany(p => p.PizzaIngredients).WithOne(pi => pi.Pizza);
+
+                builder.HasMany(p => p.PizzaIngredients).WithOne(pi => pi.Pizza).IsRequired();
             });
 
             modelBuilder.Entity<PizzaIngredient>(builder =>
@@ -140,7 +140,7 @@ namespace Project1.DataAccess
                     .HasMaxLength(255); // (column will be NVARCHAR(255)
 
 
-                builder.HasMany(s => s.StoreItems).WithOne(si => si.Store);
+                builder.HasMany(s => s.StoreItems).WithOne(si => si.Store).IsRequired();
             });
 
             modelBuilder.Entity<StoreItem>(builder =>

@@ -50,15 +50,11 @@ namespace Project1.Library
             }
         }
 
-        public OrderItem(int quantity, Pizza pizza, Order order)
+        public OrderItem(int quantity)
         {
             Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);
-            Guard.Against.Null(pizza, nameof(pizza));
-            Guard.Against.Null(order, nameof(order));
 
             Quantity = quantity;
-            Pizza = pizza;
-            Order = order;
         }
     }
 }

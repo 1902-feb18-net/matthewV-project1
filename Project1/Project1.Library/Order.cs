@@ -35,17 +35,10 @@ namespace Project1.Library
         }
 
 
-        public Order(DateTime orderTime, decimal totalPrice, Address address, Store orderedAt, Customer orderedBy)
+        public Order(DateTime orderTime, decimal totalPrice)
         {
-            Guard.Against.Null(orderedBy, nameof(orderedBy));
-            Guard.Against.Null(orderedAt, nameof(orderedAt));
-
             OrderTime = orderTime;
-            TotalPrice = totalPrice;
-            Address = address;
-            OrderedAt = orderedAt;
-            OrderedBy = orderedBy;
-            
+            TotalPrice = totalPrice;            
         }
 
 

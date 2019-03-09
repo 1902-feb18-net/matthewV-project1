@@ -51,15 +51,11 @@ namespace Project1.Library
             }
         }
 
-        public PizzaIngredient(int quantity, Ingredient ingredient, Pizza pizza)
+        public PizzaIngredient(int quantity)
         {
             Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);
-            Guard.Against.Null(ingredient, nameof(ingredient));
-            Guard.Against.Null(pizza, nameof(pizza));
 
             Quantity = quantity;
-            Ingredient = ingredient;
-            Pizza = pizza;
         }
     }
 }

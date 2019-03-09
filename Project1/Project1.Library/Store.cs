@@ -29,17 +29,15 @@ namespace Project1.Library
         }
 
 
-        public Store(string name, Address address)
+        public Store(string name)
         {
             Guard.Against.NullOrWhiteSpace(name, nameof(name));
-            Guard.Against.Null(address, nameof(address));
-
             Name = name;
-            Address = address;
         }
 
-
-        public ICollection<StoreItem> StoreItems { get; set; } //the inventory of this store. Reverse navigation property
-        public ICollection<Order> Orders { get; set; } //the orders to this store. Reverse navigation property
+        //reverse navigation properties
+        public ICollection<Customer> Customers { get; set; } //the customers with this as their default store
+        public ICollection<StoreItem> StoreItems { get; set; } //the inventory of this store. 
+        public ICollection<Order> Orders { get; set; } //the orders to this store.
     }
 }

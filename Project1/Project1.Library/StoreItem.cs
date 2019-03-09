@@ -52,15 +52,11 @@ namespace Project1.Library
         }
 
 
-        public StoreItem(int quantity, Ingredient ingredient, Store store)
+        public StoreItem(int quantity)
         {
             Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);
-            Guard.Against.Null(ingredient, nameof(ingredient));
-            Guard.Against.Null(store, nameof(store));
 
             Quantity = quantity;
-            Ingredient = ingredient;
-            Store = store;
         }
     }
 }
