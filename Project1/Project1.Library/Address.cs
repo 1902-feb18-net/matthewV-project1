@@ -61,6 +61,7 @@ namespace Project1.Library
 
         }
 
+        public Address() { }
 
 
         //Reverse navigation properties

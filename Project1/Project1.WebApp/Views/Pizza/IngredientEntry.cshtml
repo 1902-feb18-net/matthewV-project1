@@ -1,0 +1,11 @@
+﻿@model Project1.WebApp.ViewModels.IngredientViewModel
+
+<li style="padding-bottom:10px">
+    @Html.LabelFor(model => model.Id)
+    @Html.TextBoxFor(x => Model.Id, new { @class = "form-control", @readonly = "readonly" })
+    @Html.ValidationMessageFor(model => model.Id)
+
+    @Html.LabelFor(model => model.Name)
+    @Html.TextBoxFor(x => Model.Name, new { @class = "form-control", @readonly = "readonly" })
+    @Html.ValidationMessageFor(model => model.Name)
+</li>

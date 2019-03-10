@@ -1,0 +1,7 @@
+﻿@model Project1.WebApp.ViewModels.PizzaIngredientViewModel
+
+<li style="padding-bottom:10px">
+    @Html.LabelFor(model => model.Quantity)
+    <input type="number" min="1" step="1" value="@Model.Quantity">
+    @Html.ValidationMessageFor(model => model.Quantity)
+</li>

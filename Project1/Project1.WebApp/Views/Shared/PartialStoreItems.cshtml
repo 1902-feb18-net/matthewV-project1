@@ -1,0 +1,35 @@
+﻿@model ICollection<Project1.Library.StoreItem>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Ingredient Name
+            </th>
+            <th>
+                Quantity
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var storeItem in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => storeItem.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => storeItem.Ingredient.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => storeItem.Quantity)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

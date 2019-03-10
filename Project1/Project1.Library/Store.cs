@@ -28,6 +28,8 @@ namespace Project1.Library
             }
         }
 
+        public Store()
+        { }
 
         public Store(string name)
         {

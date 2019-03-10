@@ -1,0 +1,37 @@
+﻿@model Project1.WebApp.ViewModels.StoreViewModel
+
+@{
+    ViewData["Title"] = "Store Details";
+}
+
+<div>
+    <h4>Store Details</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+
+    <b> @Html.DisplayNameFor(model => model.Address) </b>
+    @{Html.RenderPartial("PartialAddress", Model.Address);}
+
+    <b> @Html.DisplayNameFor(model => model.StoreItems) </b>
+    @{Html.RenderPartial("PartialStoreItems", Model.StoreItems);}
+
+    <b> @Html.DisplayNameFor(model => model.Orders) </b>
+    @{Html.RenderPartial("PartialStoreOrderHist", Model.Orders);}
+
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

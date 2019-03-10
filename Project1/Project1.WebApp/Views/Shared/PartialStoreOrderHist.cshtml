@@ -1,0 +1,40 @@
+﻿@model ICollection<Project1.Library.Order>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Customer
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Time
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => order.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.OrderedBy.FirstName + " " + order.OrderedBy.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.TotalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => order.OrderTime)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -3,11 +3,10 @@ using Project1.Library;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Project1.DataAccess
 {
-    public class Project1DbRepository : IRepository
+    public class Project1DbRepository : IProject1DbRepository
     {
         private readonly Project1DbContext _dbContext;
 
@@ -66,6 +65,19 @@ namespace Project1.DataAccess
         public Customer GetCustomerById(int id)
         {
             return _dbContext.Customer.Find(id);
+        }
+
+        public Customer GetCustomerWithAddressById(int id)
+        {
+            return _dbContext.Customer.Include(c => c.Address).Where(c => c.Id == id).Single();
+        }
+
+        public Customer GetCustomerWithDetailsById(int id)
+        {
+            return _dbContext.Customer.Include(c => c.Address)
+                .Include(c =>c.Store)
+                .Include(c=>c.Orders)
+                .Where(c => c.Id == id).Single();
         }
 
         public IEnumerable<Customer> GetCustomersByFirstName(string name)
@@ -192,6 +204,15 @@ namespace Project1.DataAccess
         public Order GetOrderById(int id)
         {
             return _dbContext.Order.Find(id);
+        }
+
+        public Order GetOrderWithDetailsById(int id)
+        {
+            return _dbContext.Order.Include(o => o.Address)
+                .Include(o => o.OrderedAt)
+                .Include(o => o.OrderedBy)
+                .Include(o => o.OrderItems).ThenInclude(oi => oi.Pizza)
+                .Where(o => o.Id == id).Single();
         }
 
         public IEnumerable<Order> GetOrderOfCustomer(int custId)
@@ -437,6 +458,19 @@ namespace Project1.DataAccess
         public Store GetStoreById(int id)
         {
             return _dbContext.Store.Find(id);
+        }
+
+        public Store GetStoreWithAddressById(int id)
+        {
+            return _dbContext.Store.Include(s => s.Address).Where(s => s.Id == id).Single();
+        }
+
+        public Store GetStoreWithDetailsById(int id)
+        {
+            return _dbContext.Store.Include(s => s.Address)
+                .Include(s => s.StoreItems).ThenInclude(si => si.Ingredient)
+                .Include(s => s.Orders).ThenInclude(o => o.OrderedBy)
+                .Where(s => s.Id == id).Single();
         }
 
         public IEnumerable<Store> GetStoresByName(string name)

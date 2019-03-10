@@ -1,7 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using System;
 using System.Collections.Generic;
-using System.Text;
+
 
 namespace Project1.Library
 {
@@ -34,6 +34,8 @@ namespace Project1.Library
             }
         }
 
+
+        public Order() { }
 
         public Order(DateTime orderTime, decimal totalPrice)
         {

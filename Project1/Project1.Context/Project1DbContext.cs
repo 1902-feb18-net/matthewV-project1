@@ -66,9 +66,7 @@ namespace Project1.DataAccess
             {
                 builder.HasKey(i => i.Id);
 
-                builder.Property(i => i.Name)
-                        .IsRequired()  // (column will be NOT NULL)
-                        .HasMaxLength(255); // (column will be NVARCHAR(255)
+                builder.HasAlternateKey(i => i.Name); //Make ingredient name unique
 
 
                 builder.HasMany(i => i.PizzaIngredients).WithOne(pi => pi.Ingredient).OnDelete(DeleteBehavior.Restrict);
@@ -108,9 +106,8 @@ namespace Project1.DataAccess
             {
                 builder.HasKey(p => p.Id);
 
-                builder.Property(i => i.Name)
-                       .IsRequired()  // (column will be NOT NULL)
-                       .HasMaxLength(255); // (column will be NVARCHAR(255)
+                builder.HasAlternateKey(i => i.Name); //Make pizza's name unique
+
 
                 builder.Property(p => p.Price).HasColumnType("decimal(6, 2)");
 

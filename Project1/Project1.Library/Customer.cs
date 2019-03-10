@@ -10,6 +10,7 @@ namespace Project1.Library
         private string _lastname;
         public string Email { get; set; } //Nullable.
         public Address Address { get; set; } //Nullable. Value if customer wants to set a default location to deliver order to.
+        private Store _store; //customer has a default pizza store
 
         public string FirstName
         {
@@ -31,8 +32,6 @@ namespace Project1.Library
                 _lastname = value;
             }
         }
-
-        private Store _store; //customer has a default pizza store
 
         public Store Store
         {

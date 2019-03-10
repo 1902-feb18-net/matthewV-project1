@@ -38,7 +38,7 @@ namespace Project1.WebApp
                 builder.UseSqlServer(Configuration.GetConnectionString("Project1")));
 
 
-            services.AddScoped<IRepository, Project1DbRepository>();
+            services.AddScoped<IProject1DbRepository, Project1DbRepository>();
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
