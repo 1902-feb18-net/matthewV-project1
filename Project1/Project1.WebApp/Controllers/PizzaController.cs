@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
 using System;
@@ -11,10 +12,12 @@ namespace Project1.WebApp.Controllers
     public class PizzaController : Controller
     {
         public IProject1DbRepository Repo { get; }
+        private readonly ILogger<PizzaController> _logger;
 
-        public PizzaController(IProject1DbRepository repo)
+        public PizzaController(IProject1DbRepository repo, ILogger<PizzaController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: Pizza
@@ -30,11 +33,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Pizzas was empty.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -52,11 +57,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, $"DB Pizza {id} was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -67,7 +74,7 @@ namespace Project1.WebApp.Controllers
             var viewModel = new PizzaViewModel
             {             
                 Ingredients = Repo.GetAllIngredients().Select(i => new IngredientViewModel(i)).ToList() 
-                //pass all ingredients for choosing in pizza creation
+                //pass all ingredients for choosing in pizza creation?
             };
 
             return View(viewModel);
@@ -89,8 +96,9 @@ namespace Project1.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogTrace(e, "Create pizza error.");
                 return View(collection);
             }
         }

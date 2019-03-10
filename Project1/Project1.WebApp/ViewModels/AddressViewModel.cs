@@ -9,6 +9,7 @@ namespace Project1.WebApp.ViewModels
 {
     public class AddressViewModel
     {
+        //[BindNever]
         [Display(Name = "Address ID")]
         public int Id { get; set; }
 

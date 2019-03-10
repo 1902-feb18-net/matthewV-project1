@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
 
@@ -12,10 +13,12 @@ namespace Project1.WebApp.Controllers
     public class AddressController : Controller
     {
         public IProject1DbRepository Repo { get; }
+        private readonly ILogger<AddressController> _logger;
 
-        public AddressController(IProject1DbRepository repo)
+        public AddressController(IProject1DbRepository repo, ILogger<AddressController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: Address
@@ -31,11 +34,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Addresses was empty.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -53,11 +58,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, $"DB Address {id} was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -85,8 +92,9 @@ namespace Project1.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogTrace(e, "Create address error.");
                 return View(collection);
             }
         }

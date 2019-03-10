@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
 using System;
@@ -11,10 +12,12 @@ namespace Project1.WebApp.Controllers
     public class StoreController : Controller
     {
         public IProject1DbRepository Repo { get; }
+        private readonly ILogger<StoreController> _logger;
 
-        public StoreController(IProject1DbRepository repo)
+        public StoreController(IProject1DbRepository repo, ILogger<StoreController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: Store
@@ -30,11 +33,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Stores was empty.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -51,11 +56,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, $"DB Store {id} was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -63,9 +70,25 @@ namespace Project1.WebApp.Controllers
         // GET: Store/Create
         public ActionResult Create()
         {
-            var viewModel = new StoreViewModel() { Addresses = Repo.GetAllAddresses().ToList() };
+            try
+            {
+                var viewModel = new StoreViewModel()
+                { Addresses = Repo.GetAllAddresses().ToList() };
 
-            return View( viewModel );
+                return View(viewModel);
+            }
+            catch (ArgumentNullException ex)
+            {
+                // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Addresses was empty.");
+                return RedirectToAction("Error", "Home");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         // POST: Store/Create
@@ -85,8 +108,9 @@ namespace Project1.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogTrace(e, "Create store error.");
                 return View(collection);
             }
         }

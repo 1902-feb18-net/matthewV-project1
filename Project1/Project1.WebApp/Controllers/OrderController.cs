@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
 
@@ -12,10 +13,12 @@ namespace Project1.WebApp.Controllers
     public class OrderController : Controller
     {
         public IProject1DbRepository Repo { get; }
+        private readonly ILogger<CustomerController> _logger;
 
-        public OrderController(IProject1DbRepository repo)
+        public OrderController(IProject1DbRepository repo, ILogger<CustomerController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: Order
@@ -31,11 +34,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Orders was empty.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -53,11 +58,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, $"DB Order {id} was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }

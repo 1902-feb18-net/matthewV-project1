@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Project1.WebApp.Controllers
 {
     public class CustomerController : Controller
     {
         public IProject1DbRepository Repo { get; }
+        private readonly ILogger<CustomerController> _logger;
 
-        public CustomerController(IProject1DbRepository repo)
+        public CustomerController(IProject1DbRepository repo, ILogger<CustomerController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: Customer
@@ -31,11 +32,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Customers was empty.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -53,11 +56,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, $"DB Customer {id} was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
 
@@ -66,13 +71,44 @@ namespace Project1.WebApp.Controllers
         // GET: Customer/Create
         public ActionResult Create()
         {
-            var viewModel = new CustomerViewModel
-            {
-                Addresses = Repo.GetAllAddresses().ToList(),
-                Stores = Repo.GetAllStores().ToList()
-            };
+            var viewModel = new CustomerViewModel();
 
-            return View( viewModel );
+            try
+            {
+                viewModel.Addresses = Repo.GetAllAddresses().ToList();
+            }
+            catch (ArgumentNullException ex)
+            {
+                // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Addresses was empty.");
+                return RedirectToAction("Error", "Home");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
+                return RedirectToAction("Error", "Home");
+            }
+
+            try
+            {
+                viewModel.Stores = Repo.GetAllStores().ToList();
+            }
+            catch (ArgumentNullException ex)
+            {
+                // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Stores was empty.");
+                return RedirectToAction("Error", "Home");
+            }
+            catch (InvalidOperationException ex)
+            {
+                // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
+                return RedirectToAction("Error", "Home");
+            }
+
+
+            return View(viewModel);
         }
 
         // POST: Customer/Create
@@ -93,8 +129,9 @@ namespace Project1.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogTrace(e, "Create customer error.");
                 return View(collection);
             }
         }

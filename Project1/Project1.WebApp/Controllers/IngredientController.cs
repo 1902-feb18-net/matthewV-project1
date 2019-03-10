@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
 
@@ -12,10 +13,12 @@ namespace Project1.WebApp.Controllers
     public class IngredientController : Controller
     {
         public IProject1DbRepository Repo { get; }
+        private readonly ILogger<IngredientController> _logger;
 
-        public IngredientController(IProject1DbRepository repo)
+        public IngredientController(IProject1DbRepository repo, ILogger<IngredientController> logger)
         {
             Repo = repo;
+            _logger = logger;
         }
 
         // GET: Ingredient
@@ -31,11 +34,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "DB Ingredients was empty.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -53,11 +58,13 @@ namespace Project1.WebApp.Controllers
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, $"DB Ingredient {id} was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
             {
                 // should log that, and redirect to error page
+                _logger.LogTrace(ex, "Invalid state operation.");
                 return RedirectToAction("Error", "Home");
             }
         }
@@ -84,17 +91,18 @@ namespace Project1.WebApp.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                _logger.LogTrace(e, "Create ingredient error.");
                 return View(collection);
             }
         }
 
-        // GET: Ingredient/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        //// GET: Ingredient/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
 
         //// POST: Ingredient/Edit/5
         //[HttpPost]
