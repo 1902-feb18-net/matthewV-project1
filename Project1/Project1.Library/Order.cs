@@ -7,9 +7,9 @@ namespace Project1.Library
 {
     public class Order : IDClass
     {
-        public DateTime OrderTime { get; private set; }
+        public DateTime OrderTime { get; set; }
         public decimal TotalPrice { get; set; }  //calculated from order items' quantity and pizza price upon creation, and then stored
-        public Address Address { get; private set; } //Nullable. Null value means carry out, otherwise delivered to that address.
+        public Address Address { get; set; } //Nullable. Null value means carry out, otherwise delivered to that address.
 
         private Store _orderedAt;
         private Customer _orderedBy;
@@ -17,17 +17,17 @@ namespace Project1.Library
         public Store OrderedAt
         {
             get => _orderedAt;
-            private set
+            set
             {
                 Guard.Against.Null(value, nameof(value));
                 _orderedAt = value;
             }
         }
 
-        public Customer OrderedBy 
+        public Customer OrderedBy
         {
             get => _orderedBy;
-            private set
+            set
             {
                 Guard.Against.Null(value, nameof(value));
                 _orderedBy = value;
@@ -37,10 +37,15 @@ namespace Project1.Library
 
         public Order() { }
 
+        public Order(DateTime orderTime)
+        {
+            OrderTime = orderTime;
+        }
+
         public Order(DateTime orderTime, decimal totalPrice)
         {
             OrderTime = orderTime;
-            TotalPrice = totalPrice;            
+            TotalPrice = totalPrice;
         }
 
 

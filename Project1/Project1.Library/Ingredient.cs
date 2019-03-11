@@ -19,6 +19,9 @@ namespace Project1.Library
             }
         }
 
+        public Ingredient()
+        { }
+
         public Ingredient(string name)
         {
             Guard.Against.NullOrWhiteSpace(name, nameof(name));

@@ -1,0 +1,70 @@
+﻿@model Project1.WebApp.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = "Place Order";
+}
+
+@if (Model.ErrorMessage != null)
+{
+    <p>@Model.ErrorMessage</p>
+}
+else
+{
+    <h1>Place Order</h1>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                @if (Model.Stores != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="OrderedAt" class="control-label"></label>
+                        <select asp-for="OrderedAt.Id"
+                                asp-items="@(new SelectList(Model.Stores, "Id", "Name"))" class="form-control"></select>
+                    </div>
+                }
+                @if (Model.Customers != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="OrderedBy" class="control-label"></label>
+                        <select asp-for="OrderedBy.Id"
+                                asp-items="@(new SelectList(Model.Customers, "Id", "FirstName"))" class="form-control"></select>
+                    </div>
+                }
+                @if (Model.Addresses != null)
+                {
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label"></label>
+                        <select asp-for="Address.Id"
+                                asp-items="@(new SelectList(Model.Addresses, "Id", "Street"))" class="form-control"></select>
+                    </div>
+                }
+                <div>
+                    @Html.LabelFor(model => model.Pizzas)
+                    <br />
+                    @for (var i = 0; i < Model.Pizzas.Count; i++)
+                    {
+                        @Html.HiddenFor(m => Model.Pizzas[i].Id)
+                        @Html.HiddenFor(m => Model.Pizzas[i].Name)
+                        @Html.HiddenFor(m => Model.Pizzas[i].Price)
+                        @Html.CheckBoxFor(m => Model.Pizzas[i].Checked)
+                        @Model.Pizzas[i].Name
+                        @Html.EditorFor(m => Model.PizzasAmount[i].Quantity)
+                        <br />
+                    }
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

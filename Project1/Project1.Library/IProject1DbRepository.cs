@@ -59,5 +59,6 @@ namespace Project1.Library
         void Update(Customer customer);
         void Update(Store store);
         void Update(StoreItem obj);
+        void Update(Pizza obj);
     }
 }

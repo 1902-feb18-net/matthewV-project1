@@ -40,7 +40,7 @@ namespace Project1.DataAccess
 
                 builder.HasMany(a => a.Orders).WithOne(o => o.Address).OnDelete(DeleteBehavior.Restrict); //prevent deleting order history
 
-                builder.HasOne(a => a.Store).WithOne(s => s.Address).HasForeignKey("Store", "AddressId").OnDelete(DeleteBehavior.Restrict);
+                builder.HasOne(a => a.Store).WithOne(s => s.Address).HasForeignKey("Store", "AddressID").OnDelete(DeleteBehavior.Restrict);
                 //Store will have shadow property AddressId foreign key
             });
 
@@ -127,6 +127,7 @@ namespace Project1.DataAccess
             modelBuilder.Entity<Store>(builder =>
             {
                 builder.HasKey(s => s.Id);
+
 
                 builder.Property(s => s.Name)
                     .IsRequired()  // (column will be NOT NULL)

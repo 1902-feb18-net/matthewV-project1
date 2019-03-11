@@ -42,6 +42,7 @@ namespace Project1.Library
             }
         }
 
+        public Customer() { }
 
         public Customer(string firstName, string lastName, string email)
         {

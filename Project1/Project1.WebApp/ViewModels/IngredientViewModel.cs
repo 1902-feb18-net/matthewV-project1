@@ -33,5 +33,7 @@ namespace Project1.WebApp.ViewModels
             PizzaIngredients = ingredient.PizzaIngredients;
             StoreItems = ingredient.StoreItems;
         }
+
+        public bool Checked {get; set;}
     }
 }

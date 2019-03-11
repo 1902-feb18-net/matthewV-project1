@@ -35,16 +35,30 @@ namespace Project1.WebApp.ViewModels
         public ICollection<OrderItem> OrderItems { get; set; }
 
 
+        public OrderViewModel() { }
+
         public OrderViewModel(Order order)
         {
             Id = order.Id;
             OrderTime = order.OrderTime;
             TotalPrice = order.TotalPrice;
             OrderedAt = order.OrderedAt;
-            OrderedBy = OrderedBy;
+            OrderedBy = order.OrderedBy;
             Address = order.Address;
 
             OrderItems = order.OrderItems;
         }
+
+
+        //List of all addresses, customers and stores for choosing during placement
+        public List<Address> Addresses { get; set; }
+        public List<Store> Stores { get; set; }
+        public List<Customer> Customers { get; set; }
+
+        public List<PizzaViewModel> Pizzas { get; set; } //for adding pizzas to order
+        public List<OrderItemViewModel> PizzasAmount { get; set; }
+
+
+        public string ErrorMessage { get; set; }
     }
 }

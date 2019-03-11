@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
@@ -27,7 +26,8 @@ namespace Project1.WebApp.Controllers
             {
                 IEnumerable<Store> stores = Repo.GetAllStores();
 
-                var viewModels = stores.Select(m => new StoreViewModel(m));
+                var viewModels = stores.Select(m => new StoreViewModel(m)
+                { });
                 return View(viewModels);
             }
             catch (ArgumentNullException ex)
@@ -47,16 +47,26 @@ namespace Project1.WebApp.Controllers
         // GET: Store/Details/5
         public ActionResult Details(int id)
         {
+            return StoreDetails(id);
+        }
+
+        public ActionResult StoreDetails(int id)
+        {
             try
             {
                 var store = Repo.GetStoreWithDetailsById(id);
-                var viewModel = new StoreViewModel(store);
+                var viewModel = new StoreViewModel(store)
+                {
+                    Addresses = Repo.GetAllAddresses().ToList(),
+                    Ingredients = Repo.GetAllIngredients().Select(i => new IngredientViewModel(i)).ToList()
+                };
+
                 return View(viewModel);
             }
             catch (ArgumentNullException ex)
             {
                 // should log that, and redirect to error page
-                _logger.LogTrace(ex, $"DB Store {id} was not found.");
+                _logger.LogTrace(ex, $"DB Store {id} info was not found.");
                 return RedirectToAction("Error", "Home");
             }
             catch (InvalidOperationException ex)
@@ -117,28 +127,82 @@ namespace Project1.WebApp.Controllers
 
 
 
-        //// GET: Store/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+        // GET: Store/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return StoreDetails(id);
+        }
 
-        //// POST: Store/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
+        // POST: Store/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, StoreViewModel collection)
+        {
+            try
+            {
+                var store = new Store(collection.Name)
+                {
+                    Id = collection.Id,
+                };
 
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+                store.Address = Repo.GetAddressById(collection.Address.Id);
+                Repo.Update(store); //change address
+
+                var details = Repo.GetStoreWithDetailsById(store.Id);
+
+                for (var i = 0; i < collection.Ingredients.Count; i++)
+                {
+                    if (collection.Ingredients[i].Checked)
+                    {
+                        //check if store item already exists and update
+                        bool found = false;
+                        foreach (var item in details.StoreItems)
+                        {
+                            try
+                            {
+                                if (item.Ingredient.Name == collection.Ingredients[i].Name)
+                                {
+                                    found = true;
+                                    item.Quantity = collection.IngredientsAmount[i].Quantity ?? default(int);
+                                    //if no value given, 0 will throw an error, preventing update
+                                    Repo.Update(item);
+                                }
+                            }
+                            catch (ArgumentOutOfRangeException e)
+                            {
+                                _logger.LogTrace(e, "Store Item not updated to quantity of <1.");
+                            }
+                        }
+
+                        //otherwise, add new store item
+                        if (!found)
+                        {
+                            try {
+                            var storeitem = new StoreItem(collection.IngredientsAmount[i].Quantity ?? default(int));
+                            //if no value given, 0 will throw an error, preventing update of inventory
+                            storeitem.Store = store;
+                            storeitem.Ingredient = new Ingredient(collection.Ingredients[i].Name)
+                            { Id = collection.Ingredients[i].Id };
+                            Repo.Add(storeitem);
+                            }
+                            catch (ArgumentOutOfRangeException e)
+                            {
+                                _logger.LogTrace(e, "Store Item of quantity <1 not added to DB.");
+                            }
+                        }
+                    }
+                }
+
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception e)
+            {
+                _logger.LogTrace(e, "Update store error.");
+                //collection.Addresses = Repo.GetAllAddresses().ToList(); //? Fixed null addresses error, but gave null storeitems error?
+                return RedirectToAction(nameof(Index));
+            }
+        }
 
 
 

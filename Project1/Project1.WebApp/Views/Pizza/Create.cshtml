@@ -23,7 +23,21 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
 
-            <fieldset>
+            <div>
+                @Html.LabelFor(model => model.Ingredients)
+                <br />
+                @for (var i = 0; i < Model.Ingredients.Count; i++)
+                {
+                    @Html.HiddenFor(m => Model.Ingredients[i].Id)
+                    @Html.HiddenFor(m => Model.Ingredients[i].Name)
+                    @Html.CheckBoxFor(m => Model.Ingredients[i].Checked)
+                    @Model.Ingredients[i].Name
+                    @Html.EditorFor(m => Model.IngredientsAmount[i].Quantity)
+                    <br />
+                }
+            </div>
+       
+            @*<fieldset>
                 <legend>Ingredients</legend>
 
                 @if (Model.Ingredients == null || Model.Ingredients.Count == 0)
@@ -42,7 +56,7 @@
                     </ul>
                 }
                 <a href="#">Add Ingredient</a>
-            </fieldset>
+            </fieldset>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

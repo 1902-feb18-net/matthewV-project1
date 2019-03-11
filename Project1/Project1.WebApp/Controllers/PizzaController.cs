@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project1.Library;
 using Project1.WebApp.ViewModels;
@@ -72,9 +71,9 @@ namespace Project1.WebApp.Controllers
         public ActionResult Create()
         {
             var viewModel = new PizzaViewModel
-            {             
-                Ingredients = Repo.GetAllIngredients().Select(i => new IngredientViewModel(i)).ToList() 
-                //pass all ingredients for choosing in pizza creation?
+            {
+                Ingredients = Repo.GetAllIngredients().Select(i => new IngredientViewModel(i)).ToList()
+                //pass all ingredients for choosing in pizza creation
             };
 
             return View(viewModel);
@@ -92,7 +91,23 @@ namespace Project1.WebApp.Controllers
                     Id = collection.Id,
                 };
 
-                //Repo.Add(pizza);
+
+                Repo.Add(pizza);
+
+                for (var i = 0; i < collection.Ingredients.Count; i++)
+                {
+                    if (collection.Ingredients[i].Checked)
+                    {
+                        var pizzaingredient = new PizzaIngredient(collection.IngredientsAmount[i].Quantity)
+                        {
+                            Ingredient = new Ingredient(collection.Ingredients[i].Name)
+                            { Id = collection.Ingredients[i].Id },
+                            Pizza = pizza
+                        };
+
+                        Repo.Add(pizzaingredient);
+                    }
+                }
 
                 return RedirectToAction(nameof(Index));
             }

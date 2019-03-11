@@ -9,7 +9,7 @@ namespace Project1.WebApp.ViewModels
         [Display(Name = "Pizza ID")]
         public int Id { get; set; }
 
-        [Display(Name = "Pizza")]
+        [Display(Name = "Pizza Name")]
         [Required]
         [MaxLength(255)]
         public string Name { get; set; }
@@ -22,7 +22,8 @@ namespace Project1.WebApp.ViewModels
         public ICollection<OrderItem> OrderItems { get; set; }
         public ICollection<PizzaIngredient> PizzaIngredients { get; set; }
 
-        //public List<PizzaIngredientViewModel> PizzaIngredients { get; set; }
+
+        public List<PizzaIngredientViewModel> IngredientsAmount { get; set; }
         public List<IngredientViewModel> Ingredients { get; set; } //list of all ingredients for choosing during creation
 
 
@@ -38,5 +39,7 @@ namespace Project1.WebApp.ViewModels
             OrderItems = pizza.OrderItems;
             PizzaIngredients = pizza.PizzaIngredients;
         }
+
+        public bool Checked { get; set; }
     }
 }

@@ -58,7 +58,7 @@ namespace Project1.DataAccess
 
         public IEnumerable<Customer> GetAllCustomers()
         {
-            return _dbContext.Customer.ToList(); 
+            return _dbContext.Customer.ToList();
         }
 
 
@@ -75,8 +75,8 @@ namespace Project1.DataAccess
         public Customer GetCustomerWithDetailsById(int id)
         {
             return _dbContext.Customer.Include(c => c.Address)
-                .Include(c =>c.Store)
-                .Include(c=>c.Orders)
+                .Include(c => c.Store)
+                .Include(c => c.Orders).ThenInclude(o => o.OrderedAt) //theninclude for order's store name
                 .Where(c => c.Id == id).Single();
         }
 
@@ -156,7 +156,7 @@ namespace Project1.DataAccess
 
         public Ingredient GetIngredientById(int id)
         {
-            return _dbContext.Ingredient.Find(id); 
+            return _dbContext.Ingredient.Find(id);
         }
 
         public void Add(Ingredient obj)
@@ -190,10 +190,10 @@ namespace Project1.DataAccess
             }
         }
 
-        
+
         public IEnumerable<Order> GetAllOrders()
         {
-            return _dbContext.Order.ToList(); 
+            return _dbContext.Order.ToList();
         }
 
         public IEnumerable<Order> GetAllOrdersWithPizzas()
@@ -247,14 +247,14 @@ namespace Project1.DataAccess
 
         public IEnumerable<Order> GetOrdersSortedExpensive()
         {
-            return _dbContext.Order.OrderByDescending(o => o.TotalPrice);            
+            return _dbContext.Order.OrderByDescending(o => o.TotalPrice);
         }
 
         public IEnumerable<Order> GetOrdersSortedCheapest()
         {
             return _dbContext.Order.OrderBy(o => o.TotalPrice);
         }
-       
+
         //public  GetOrdersStatistics()
         //{
         //    throw new NotImplementedException();
@@ -265,6 +265,106 @@ namespace Project1.DataAccess
             throw new NotImplementedException();
         }
 
+        //    var matching = _dbContext.Store.Include(s => s.StoreItems).ThenInclude(si => si.Ingredient)
+        //.Where(s => s.Id == order.OrderedAt.Id).Single();
+
+        //                    foreach(var item in order.OrderItems)
+        //                    {
+        //                        if(item.)
+        //}
+
+        protected bool CheckOrder(Order order)
+        {
+            var matchingStore = _dbContext.Store.Include(s => s.StoreItems).ThenInclude(si => si.Ingredient)
+                          .Where(s => s.Id == order.OrderedAt.Id).Single();
+
+            //calculate the total requirements for everything in the order
+            var totalIngredientRequirements = new Dictionary<string, int>();
+            foreach (var item in order.OrderItems)
+            {
+                var piz = _dbContext.Pizza.Include(p => p.PizzaIngredients).ThenInclude(pi => pi.Ingredient)
+                    .Where(p => p.Id == item.Pizza.Id).Single(); //grab the orderitem's pizza's ingredient info
+
+                //add the num of the ingredient in the pizza * the num of the pizza in the order to the total
+                foreach (var pizingr in piz.PizzaIngredients)
+                {
+                    if (totalIngredientRequirements.ContainsKey(pizingr.Ingredient.Name))
+                    {
+                        totalIngredientRequirements[pizingr.Ingredient.Name] += pizingr.Quantity * item.Quantity;
+                    }
+                    else
+                    {
+                        totalIngredientRequirements.Add(pizingr.Ingredient.Name, pizingr.Quantity * item.Quantity);
+                    }
+                }
+            }
+
+            foreach (var ingAmount in totalIngredientRequirements)
+            {
+                bool found = false;
+                foreach (var inven in matchingStore.StoreItems)
+                {
+                    if (inven.Ingredient.Name == ingAmount.Key)
+                    {
+                        found = true;
+                        if (inven.Quantity < ingAmount.Value)
+                        {
+                            return false; //Not enough inventory to satisfy order
+                        }
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    throw new ArgumentOutOfRangeException($"Item ingredient {ingAmount.Key} not in chosen store's inventory.");
+                }
+            }
+
+            return true;
+        }
+
+        protected void DecrementInventory(Order order)
+        {
+            var matchingStore = _dbContext.Store.Include(s => s.StoreItems).ThenInclude(si => si.Ingredient)
+                           .Where(s => s.Id == order.OrderedAt.Id).Single();
+
+            //calculate the total requirements for everything in the order
+            var totalIngredientRequirements = new Dictionary<string, int>();
+            foreach (var item in order.OrderItems)
+            {
+                var piz = _dbContext.Pizza.Include(p => p.PizzaIngredients).ThenInclude(pi => pi.Ingredient)
+                    .Where(p => p.Id == item.Pizza.Id).Single(); //grab the orderitem's pizza's ingredient info
+
+                //add the num of the ingredient in the pizza * the num of the pizza in the order to the total
+                foreach (var pizingr in piz.PizzaIngredients)
+                {
+                    if (totalIngredientRequirements.ContainsKey(pizingr.Ingredient.Name))
+                    {
+                        totalIngredientRequirements[pizingr.Ingredient.Name] += pizingr.Quantity * item.Quantity;
+                    }
+                    else
+                    {
+                        totalIngredientRequirements.Add(pizingr.Ingredient.Name, pizingr.Quantity * item.Quantity);
+                    }
+                }
+            }
+
+            //decrement store inventory for each ingredient
+            foreach (var ingAmount in totalIngredientRequirements)
+            {
+                foreach (var inven in matchingStore.StoreItems)
+                {
+                    if (inven.Ingredient.Name == ingAmount.Key)
+                    {
+                        inven.Quantity -= ingAmount.Value;
+                        break;
+                    }
+                }
+            }
+
+            _dbContext.SaveChanges();
+            //_dbContext.Entry(matchingStore).State = EntityState.Modified;
+        }
 
         public void Add(Order order)
         {
@@ -291,9 +391,17 @@ namespace Project1.DataAccess
                             {
                                 //log it
 
-                                throw new Exception("A customer cannot place another order at the same store within two hours.");
+                                throw new ArgumentException("A customer cannot place another order at the same store within two hours.");
                             }
                         }
+
+
+                        if (!CheckOrder(order))
+                        {
+                            throw new ArgumentException("Not enough inventory to satisfy order.");
+                        }
+                        else
+                        { DecrementInventory(order); }
 
 
                         _dbContext.Order.Add(order); //add to local _dbContext
@@ -316,7 +424,7 @@ namespace Project1.DataAccess
 
         public OrderItem GetOrderItemById(int id)
         {
-            return _dbContext.OrderItem.Find(id); 
+            return _dbContext.OrderItem.Find(id);
         }
 
 
@@ -338,7 +446,11 @@ namespace Project1.DataAccess
                 {
                     try
                     {
-                        _dbContext.OrderItem.Add(obj); //add to local _dbContext
+                        _dbContext.OrderItem.Attach(obj);
+                        _dbContext.Entry(obj).State = EntityState.Added;
+                        //_dbContext.OrderItem.Add(obj); //add to local _dbContext
+                        _dbContext.Entry(obj.Order).State = EntityState.Unchanged;
+                        _dbContext.Entry(obj.Pizza).State = EntityState.Unchanged;
                         _dbContext.SaveChanges();  //run _dbContext.SaveChanges() to run the appropriate insert, adding it to db
                     }
                     catch (DbUpdateException)
@@ -349,12 +461,12 @@ namespace Project1.DataAccess
                     }
                 }
             }
-        }     
+        }
 
 
         public IEnumerable<Pizza> GetAllPizzas()
         {
-            return _dbContext.Pizza.ToList(); 
+            return _dbContext.Pizza.ToList();
         }
 
         public IEnumerable<Pizza> GetAllPizzasWithIngredients()
@@ -433,6 +545,8 @@ namespace Project1.DataAccess
                     try
                     {
                         _dbContext.PizzaIngredient.Add(PizzaIngredient); //add to local _dbContext
+                        _dbContext.Entry(PizzaIngredient.Ingredient).State = EntityState.Unchanged;
+                        _dbContext.Entry(PizzaIngredient.Pizza).State = EntityState.Unchanged;
                         _dbContext.SaveChanges();  //run _dbContext.savechanges() to run the appropriate insert, adding it to db
                     }
                     catch (DbUpdateException)
@@ -547,6 +661,8 @@ namespace Project1.DataAccess
                     try
                     {
                         _dbContext.StoreItem.Add(StoreItem); //add to local _dbContext
+                        _dbContext.Entry(StoreItem.Store).State = EntityState.Unchanged;
+                        _dbContext.Entry(StoreItem.Ingredient).State = EntityState.Unchanged;
                         _dbContext.SaveChanges();  //run _dbContext.SaveChanges() to run the appropriate insert, adding it to db
                     }
                     catch (DbUpdateException)
@@ -624,7 +740,7 @@ namespace Project1.DataAccess
                 {
                     //update local values
                     _dbContext.Entry(existingStore).CurrentValues.SetValues(store);
-
+                    _dbContext.Entry(existingStore).Property("AddressID").CurrentValue = store.Address.Id;
                     _dbContext.SaveChanges(); //update db's values
                 }
                 else
@@ -645,6 +761,31 @@ namespace Project1.DataAccess
             else
             {
                 var existing = GetStoreItemById(obj.Id);
+                if (existing != null) //if given pizza is actually in db
+                {
+                    //update local values
+                    _dbContext.Entry(existing).CurrentValues.SetValues(obj);
+
+                    _dbContext.SaveChanges(); //update db's values
+                }
+                else
+                {
+                    //log it!
+                    throw new ArgumentOutOfRangeException("Store item with given id does not exist");
+                }
+            }
+        }
+
+        public void Update(Pizza obj)
+        {
+            if (obj is null)
+            {
+                //log it!
+                throw new ArgumentNullException("Cannot update null store item");
+            }
+            else
+            {
+                var existing = GetPizzaById(obj.Id);
                 if (existing != null) //if given pizza is actually in db
                 {
                     //update local values

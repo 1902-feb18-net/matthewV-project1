@@ -47,6 +47,8 @@ namespace Project1.WebApp.ViewModels
 
 
         public List<Address> Addresses { get; set; } //list of all addresses for choosing during creation
+        public List<IngredientViewModel> Ingredients { get; set; }
+        public List<StoreItemViewModel> IngredientsAmount { get; set; }
 
     }
 }

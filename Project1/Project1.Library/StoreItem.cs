@@ -52,6 +52,9 @@ namespace Project1.Library
         }
 
 
+
+        public StoreItem() { }
+
         public StoreItem(int quantity)
         {
             Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);

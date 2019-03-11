@@ -51,6 +51,9 @@ namespace Project1.Library
             }
         }
 
+
+        public PizzaIngredient() { }
+
         public PizzaIngredient(int quantity)
         {
             Guard.Against.OutOfRange(quantity, nameof(quantity), 1, int.MaxValue);

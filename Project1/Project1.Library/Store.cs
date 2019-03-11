@@ -9,6 +9,7 @@ namespace Project1.Library
     {
         private string _name;
         private Address _address; //Physical location of the store
+        public int AddressID { get; set; }
 
         public string Name
         {

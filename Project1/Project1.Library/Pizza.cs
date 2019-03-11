@@ -39,6 +39,9 @@ namespace Project1.Library
             }
         }
 
+
+        public Pizza() { }
+
         public Pizza(string name, decimal price)
         {
             Guard.Against.NullOrWhiteSpace(name, nameof(name));
