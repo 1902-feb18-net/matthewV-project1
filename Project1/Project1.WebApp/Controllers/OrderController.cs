@@ -21,14 +21,57 @@ namespace Project1.WebApp.Controllers
             _logger = logger;
         }
 
-        // GET: Order
-        public ActionResult Index()
+        //// GET: Order
+        //public ActionResult Index()
+        //{
+        //    try
+        //    {
+        //        IEnumerable<Order> orders = Repo.GetAllOrders();
+
+        //        var viewModels = orders.Select(m => new OrderViewModel(m));
+        //        return View(viewModels);
+        //    }
+        //    catch (ArgumentNullException ex)
+        //    {
+        //        // should log that, and redirect to error page
+        //        _logger.LogTrace(ex, "DB Orders was empty.");
+        //        return RedirectToAction("Error", "Home");
+        //    }
+        //    catch (InvalidOperationException ex)
+        //    {
+        //        // should log that, and redirect to error page
+        //        _logger.LogTrace(ex, "Invalid state operation.");
+        //        return RedirectToAction("Error", "Home");
+        //    }
+        //}
+
+        // GET: Order/Index/5
+        [Route("Order/Index/{sortOrder?}")]
+        public ActionResult Index( int sortOrder)
         {
             try
             {
                 IEnumerable<Order> orders = Repo.GetAllOrders();
+                switch (sortOrder)
+                {
+                    case 1:
+                        orders = Repo.GetOrdersSortedEarliest();
+                        break;
+                    case 2:
+                        orders = Repo.GetOrdersSortedLatest();
+                        break;
+                    case 3:
+                        orders = Repo.GetOrdersSortedCheapest();
+                        break;
+                    case 4:
+                        orders = Repo.GetOrdersSortedExpensive();
+                        break;
+                    default:
+                        break;
+                }
 
                 var viewModels = orders.Select(m => new OrderViewModel(m));
+                
                 return View(viewModels);
             }
             catch (ArgumentNullException ex)
@@ -154,7 +197,7 @@ namespace Project1.WebApp.Controllers
             {
                 var order = new Order()
                 {
-                    Id = collection.Id,
+                    //Id = collection.Id,
                     OrderTime = DateTime.Now
                 };
 
@@ -243,8 +286,9 @@ namespace Project1.WebApp.Controllers
                         }
                     }
 
-                    Repo.Add(order);
                 }
+
+                Repo.Add(order);
 
                 return RedirectToAction(nameof(Index));
             }

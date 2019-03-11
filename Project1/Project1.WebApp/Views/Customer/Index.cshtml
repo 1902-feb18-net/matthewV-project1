@@ -4,11 +4,15 @@
     ViewData["Title"] = "Customer Index";
 }
 
-<h1>Index</h1>
+<h1>Customer Index</h1>
 
 <p>
     <a asp-action="Create">Create New Customer</a>
 </p>
+@*<form method="post">
+    Search Customer First Name
+    <input type="text" asp-controller="Customer" asp-action="Index" />
+</form> <br />*@
 <table class="table">
     <thead>
         <tr>
@@ -28,24 +32,25 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id=item.Id })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

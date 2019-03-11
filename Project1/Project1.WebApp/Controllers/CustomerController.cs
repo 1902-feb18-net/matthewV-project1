@@ -20,11 +20,14 @@ namespace Project1.WebApp.Controllers
         }
 
         // GET: Customer
-        public ActionResult Index()
+        [Route("Customer/Index/{name?}")]
+        public ActionResult Index(string name)
         {
             try
             {
-                IEnumerable<Customer> customers = Repo.GetAllCustomers();
+                IEnumerable<Customer> customers;
+                if (name == null) { customers = Repo.GetAllCustomers(); }
+                else { customers = Repo.GetCustomersByFirstName(name);  }
 
                 var viewModels = customers.Select(m => new CustomerViewModel(m));
                 return View(viewModels);

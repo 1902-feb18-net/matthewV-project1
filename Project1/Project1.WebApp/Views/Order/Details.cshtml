@@ -8,50 +8,54 @@
 <div>
     <h4>Order Details</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrderTime)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalPrice)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.TotalPrice)
-        </dd>
-    </dl>
+
+    @*@{Html.RenderPartial("PartialOrderHist", Model);}*@
 
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderedAt)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrderedAt.Name)
-        </dd>
-    </dl>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OrderTime)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TotalPrice)
+            </dd>
+        </dl>
 
-    <dl class="row">
-        <dt class="col-sm-2">
-            Customer Name
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrderedBy.FirstName)
-            @Html.DisplayFor(model => model.OrderedBy.LastName)
-        </dd>
-    </dl>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OrderedAt)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderedAt.Name)
+            </dd>
+        </dl>
+
+        <dl class="row">
+            <dt class="col-sm-2">
+                Customer Name
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderedBy.FirstName)
+                @Html.DisplayFor(model => model.OrderedBy.LastName)
+            </dd>
+        </dl>
 
     <b> @Html.DisplayNameFor(model => model.Address) </b>
     @{Html.RenderPartial("PartialAddress", Model.Address);}
 
     @* Display order items info *@
+    @{Html.RenderPartial("PartialOrderItems", Model.OrderItems);}
 
 </div>
 

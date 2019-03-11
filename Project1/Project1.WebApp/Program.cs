@@ -14,7 +14,7 @@ namespace Project1.WebApp
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                logger.Debug("initialize main");
                 CreateWebHostBuilder(args).Build().Run();
             }
             catch (Exception ex)

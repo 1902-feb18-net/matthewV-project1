@@ -4,11 +4,25 @@
     ViewData["Title"] = "Order Index";
 }
 
-<h1>Index</h1>
+<h1>Order Index</h1>
 
 <p>
     <a asp-action="Create">Place New Order</a>
 </p>
+<a asp-controller="Order"
+   asp-action="Index"
+   asp-route-sortOrder="1">Sorted Earliest</a> <br />
+<a asp-controller="Order"
+   asp-action="Index"
+   asp-route-sortOrder="2">Sorted Latest</a> <br />
+<a asp-controller="Order"
+   asp-action="Index"
+   asp-route-sortOrder="3">Sorted Cheapest</a> <br />
+<a asp-controller="Order"
+   asp-action="Index"
+   asp-route-sortOrder="4">Sorted Expensive</a> <br />
+                                                <br />
+
 <table class="table">
     <thead>
         <tr>
@@ -25,21 +39,23 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id=item.Id })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPrice)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+

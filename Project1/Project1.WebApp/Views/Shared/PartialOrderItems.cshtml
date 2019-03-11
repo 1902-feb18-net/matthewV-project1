@@ -1,0 +1,28 @@
+﻿@model ICollection<Project1.Library.OrderItem>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Pizza
+            </th>
+            <th>
+                Quantity
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pizza.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
