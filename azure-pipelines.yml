@@ -15,3 +15,8 @@ variables:
 steps:
 - script: dotnet build Project1 --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+- task: AzureRmWebAppDeployment@3
+  inputs:
+    azureSubscription: 'matthew azure connection'
+    WebAppName: 'matthew1995project1PizzaStore'
+    Package: $(System.ArtifactsDirectory)/**/*.zip
