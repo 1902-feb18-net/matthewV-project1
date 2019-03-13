@@ -1,7 +1,16 @@
 secretConfiguration.cs
 
-# Created by https://www.gitignore.io/api/git,windows,visualstudio,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=git,windows,visualstudio,visualstudiocode
+### SonarQube ###
+# SonarQube ignore files.
+#
+# https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
+# Sonar Scanner working directories
+.sonar/
+.scannerwork/
+
+# http://www.sonarlint.org/commandline/
+# SonarLint working directories, configuration files (including credentials)
+.sonarlint/
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -397,5 +406,3 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-
-# End of https://www.gitignore.io/api/git,windows,visualstudio,visualstudiocode

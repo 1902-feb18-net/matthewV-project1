@@ -178,6 +178,34 @@ namespace Project1.XUnitTesting
             Assert.Throws<ArgumentOutOfRangeException>(() => cheesePizza.Price = amount);
         }
 
+
+        [Theory]
+        [InlineData(-10)]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void PizzaConstructorCannotPassNegativeOrZeroPrice(int amount)
+        {                    
+            //Arrange, Act and Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Pizza("cheese", amount));
+        }
+
+        [Fact]
+        public void PizzaCannotAssignNullName()
+        {
+            //Arrange
+            Pizza newPizza = new Pizza();
+
+            //Act and Assert
+            Assert.Throws<ArgumentNullException>(() => newPizza.Name = null);
+        }
+
+        [Fact]
+        public void PizzaConstructorCannotPassNullName()
+        {
+            //Arrange, Act and Assert
+            Assert.Throws<ArgumentNullException>(() => new Pizza(null, 1));
+        }
+
         [Fact]
         public void IngredientCannotAssignNullName()
         {
